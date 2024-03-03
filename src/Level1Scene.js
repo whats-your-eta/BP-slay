@@ -17,7 +17,7 @@ class Level1Scene extends Phaser.Scene {
 		this.load.image("enemy", "assets/enemy.png");
 
 		this.load.audio("jump", ["assets/jump.ogg", "assets/jump.mp3"]);
-		this.load.audio("musicNote", ["assets/coin.ogg", "assets/coin.mp3"]); // TODO add all sounds of music notes
+		this.load.audio("musicNote", ["assets/musicNote.ogg", "assets/musicNote.mp3"]); // TODO add all sounds of music notes
 		this.load.audio("dead", ["assets/dead.ogg", "assets/dead.mp3"]);
 
 		this.load.image("pixel", "assets/pixel.png");
@@ -29,6 +29,8 @@ class Level1Scene extends Phaser.Scene {
 	create() {
 
 		// TODO: add variables needed
+		this.totalMusicNotes = 5; // # of music notes player must collect in total 
+		this.collectedMusicNotes = 0; // # of music notes player has collected, initialized at 0
 
 		// create the player sprite
 		this.player = this.physics.add.sprite(this.game.config.width / 2, this.game.config.height / 2, "player");
@@ -58,7 +60,7 @@ class Level1Scene extends Phaser.Scene {
 		// Make the player collide with walls
 		this.physics.add.collider(this.player, this.walls);
 
-		this.coin = this.physics.add.sprite(0, 0, "coin");
+		this.musicNote = this.physics.add.sprite(0, 0, "musicNote");
 		this.moveCoin();
 
 		// Display the score
@@ -139,7 +141,7 @@ class Level1Scene extends Phaser.Scene {
 		this.movePlayer();
 		this.checkCoinCollisions();
 
-		// If the player goes out of bounds (ie. falls through a hole),
+		// If the player goes out of bounds (ie. falls through a hole), TODO make player unable to go out of bounds
 		// the player dies
 		if (this.player.y > this.game.config.height || this.player.y < 0) {
 			this.handlePlayerDeath();
@@ -179,11 +181,14 @@ class Level1Scene extends Phaser.Scene {
 		if (this.physics.overlap(this.player, this.musicNote)) {
 			// the player has found a music note!
 
-			this.score += 5; // TODO replace 'score' with '# music notes found'
+			this.collectedMusicNotes++;
 			
 			// update the score label
-			this.scoreLabel.setText("score: " + this.score);
+			this.scoreLabel.setText("score: " + this.score); // TODO change to 'music notes left' maybe?
 			
+			// TODO hide music note/make not visible and can no longer be collided with--check if this line works
+			this.musicNote.setVisible(false);
+
 			// // move the coin to a new spot
 			// this.moveCoin();
 			// this.coinSound.play();
