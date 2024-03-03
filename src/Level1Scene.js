@@ -7,8 +7,8 @@ class Level1Scene extends Phaser.Scene {
 
 	preload() {
 		this.load.spritesheet("player", "assets/player2.png", {
-			frameWidth: 20,
-			frameHeight: 20,
+			frameWidth: 680,
+			frameHeight: 680,
 		});
 
 		this.load.image("brownroom", "assets/brownroom.png", {
@@ -16,16 +16,16 @@ class Level1Scene extends Phaser.Scene {
 			frameHeight: 650,
 		});
 
-		this.load.image("musicNote1", "assets/musicNote1.png"); // TODO add all types of music notes
-		this.load.image("musicNote2", "assets/musicNote2.png");
-		this.load.image("musicNote3", "assets/musicNote3.png");
-		this.load.image("enemy", "assets/enemy.png");
+		// this.load.image("musicNote1", "assets/musicNote1.png"); // TODO add all types of music notes
+		// this.load.image("musicNote2", "assets/musicNote2.png");
+		// this.load.image("musicNote3", "assets/musicNote3.png");
+		this.load.image("enemy", "assets/ghost.png");
 
-		this.load.audio("jump", ["assets/jump.ogg", "assets/jump.mp3"]);
-		this.load.audio("musicNote", ["assets/musicNote.ogg", "assets/musicNote.mp3"]); // TODO add all sounds of music notes
-		this.load.audio("dead", ["assets/dead.ogg", "assets/dead.mp3"]);
+		// this.load.audio("jump", ["assets/jump.ogg", "assets/jump.mp3"]);
+		// this.load.audio("musicNote", ["assets/musicNote.ogg", "assets/musicNote.mp3"]); // TODO add all sounds of music notes
+		// this.load.audio("dead", ["assets/dead.ogg", "assets/dead.mp3"]);
 
-		this.load.image("pixel", "assets/pixel.png");
+		// this.load.image("pixel", "assets/pixel.png");
 	}
 
 	/**
@@ -38,24 +38,26 @@ class Level1Scene extends Phaser.Scene {
 		this.totalMusicNotes = 3; // # of music notes player must collect in total 
 		this.collectedMusicNotes = 0; // # of music notes player has collected, initialized at 0
 
+		// bg 
+		this.backgroundImage = this.add.image(500, 325, 'brownroom');
+		
 		// create the player sprite
 		this.player = this.physics.add.sprite(this.game.config.width / 2, this.game.config.height / 2, "player");
 
-		// bg 
-		this.backgroundImage = this.add.image(500, 325, 'brownroom');
+		this.player.setScale(.2);
 		// player movement animations
-		this.anims.create({
-						key: "right",
-			frames: this.anims.generateFrameNumbers("player", { frames: [1, 2] }),
-			frameRate: 8,
-			repeat: -1,
-		});
-		this.anims.create({
-			key: "left",
-			frames: this.anims.generateFrameNumbers("player", { frames: [3, 4] }),
-			frameRate: 8,
-			repeat: -1,
-		});
+		// this.anims.create({
+		// 				key: "right",
+		// 	frames: this.anims.generateFrameNumbers("player", { frames: [1, 2] }),
+		// 	frameRate: 8,
+		// 	repeat: -1,
+		// });
+		// this.anims.create({
+		// 	key: "left",
+		// 	frames: this.anims.generateFrameNumbers("player", { frames: [3, 4] }),
+		// 	frameRate: 8,
+		// 	repeat: -1,
+		// });
 
 		// no gravity
 		this.player.body.gravity.y = 0;
@@ -67,7 +69,7 @@ class Level1Scene extends Phaser.Scene {
 
 
 		this.musicNote = this.physics.add.sprite(0, 0, "musicNote");
-		this.moveCoin();
+		// this.moveCoin();
 
 		// Display the score
 		this.scoreLabel = this.add.text(30, 25, "score: 0", {
@@ -79,6 +81,7 @@ class Level1Scene extends Phaser.Scene {
 
 		// add enemies!
 		this.enemies = this.physics.add.group();
+
 		// call this.addEnemy() once every 2.2 seconds
 		this.time.addEvent({
 			delay: 2200,
@@ -90,9 +93,9 @@ class Level1Scene extends Phaser.Scene {
 			this.handlePlayerDeath();
 		});
 
-		this.jumpSound = this.sound.add("jump");
-		this.noteSound = this.sound.add("musicNote"); // TODO do for all music notes
-		this.deadSound = this.sound.add("dead");
+		// this.jumpSound = this.sound.add("jump");
+		// this.noteSound = this.sound.add("musicNote"); // TODO do for all music notes
+		// this.deadSound = this.sound.add("dead");
 
 		// particles for when the player dies
 		// the initial location doesn't matter -- we'll set the location
@@ -117,9 +120,9 @@ class Level1Scene extends Phaser.Scene {
 	 * Creates the walls of the game: borders of screen rectangle & prevention of player moving up thru blackboard
 	 */
 	createBounds() {
-		this.physics.world.setBounds(0, 0, gameState.width, gameState.height, true, true, true, false);
-		gameState.player.setCollideWorldBounds(true);
-		gameState.enemies.setCollideWorldBounds(true);
+		this.physics.world.setBounds(0, 0, this.game.config.width, this.game.config.height, true, true, true, false);
+		this.player.body.setCollideWorldBounds(true);
+		// this.enemies.body.setCollideWorldBounds(true);
 	}
 
 	/**
@@ -134,25 +137,31 @@ class Level1Scene extends Phaser.Scene {
 			return;
 		}
 
+		for (let enemy of this.enemies.children.entries) {
+			this.moveEnemyTowardsPlayer(enemy);
+
+		}
+
 		this.movePlayer();
-		this.checkCoinCollisions();
+		// this.checkCoinCollisions();
 
 		// If the player goes out of bounds (ie. falls through a hole), TODO make player unable to go out of bounds
 		// the player dies
 		if (this.player.y > this.game.config.height || this.player.y < 0) {
 			this.handlePlayerDeath();
 		}
-		this.moveEnemyTowardsPlayer();
+		// console.log(this.enemies);
+		
 	}
 
 	/**
 	 * Handles moving the player with the arrow keys
 	 */
-	moveEnemyTowardsPlayer() {
-		let angle = Phaser.Math.Angle.Between(this.enemy.x, this.enemy.y, this.player.x, this.player.y);
+	moveEnemyTowardsPlayer(enemy) {
+		let angle = Phaser.Math.Angle.Between(enemy.body.x, enemy.body.y, this.player.body.x, this.player.body.y);
 		let enemySpeed = 150;
-		this.enemy.body.velocity.x = Math.cos(angle) * enemySpeed;
-		this.enemy.body.velocity.y = Math.sin(angle) * enemySpeed;
+		enemy.body.velocity.x = Math.cos(angle) * enemySpeed;
+		enemy.body.velocity.y = Math.sin(angle) * enemySpeed;
 
 	}
 
@@ -160,16 +169,29 @@ class Level1Scene extends Phaser.Scene {
 		// check for active input
 		if (this.cursors.left.isDown) {
 			// move left
-			this.player.body.velocity.x = -200;
-			this.player.anims.play("left", true);
+			this.player.setVelocityX(-500);
+			// this.player.body.velocity.x = -300;
+			// this.player.anims.play("left", true);
 		} else if (this.cursors.right.isDown) {
 			// move right
-			this.player.body.velocity.x = 200;
-			this.player.anims.play("right", true);
+			this.player.setVelocityX(500);
+			// this.player.body.velocity.x = 300;
+			// this.player.anims.play("right", true);
+		} else {
+			// stop moving horizontally
+			this.player.setVelocityX(0);
+			// this.player.body.velocity.x = 0;
+		}
+		
+		if (this.cursors.up.isDown) {
+			this.player.body.velocity.y = -500;
+		} else if (this.cursors.down.isDown) {
+			this.player.body.velocity.y = 500;
+		
 		} else {
 			// stop moving in the horizontal
-			this.player.body.velocity.x = 0;
-			this.player.setFrame(0);
+			this.player.body.velocity.y = 0;
+			// this.player.setFrame(0);
 		}
 
 		if (this.cursors.up.isDown && this.player.body.onFloor()) {
@@ -183,27 +205,32 @@ class Level1Scene extends Phaser.Scene {
 	 * Check to see whether the player has collided with any music notes
 	 */
 	checkMusicNoteCollisions() {
-		if (this.physics.overlap(this.player, this.musicNote)) {
-			// the player has found a music note!
+		// if (this.physics.overlap(this.player, this.musicNote)) {
+		// 	// the player has found a music note!
 
-			this.collectedMusicNotes++;
+		// 	this.collectedMusicNotes++;
 			
-			// update the score label
-			this.scoreLabel.setText("score: " + this.score); // TODO change to 'music notes left' maybe?
+		// 	// update the score label
+		// 	this.scoreLabel.setText("score: " + this.score); // TODO change to 'music notes left' maybe?
 			
-			// TODO hide music note/make not visible and can no longer be collided with--check if this line works
-			this.musicNote.setVisible(false);
+		// 	// TODO hide music note/make not visible and can no longer be collided with--check if this line works
+		// 	this.musicNote.setVisible(false);
 
-			// // move the coin to a new spot
-			// this.moveCoin();
-			// this.coinSound.play();
-		}
+		// 	// // move the coin to a new spot
+		// 	// this.moveCoin();
+		// 	// this.coinSound.play();
+		// }
 	}
 
 	/**
 	 * randomize music note locations
 	 */
 	setNoteLocations() { // TODO make this for multiple music notes
+		var x = Phaser.Math.Between(-100, 100);
+		var y = Phaser.Math.Between(-50, 0);
+		this.musicNote.setPosition(x,y);
+		this.musicNote.setScale(0);
+
 		// // these are the possible positions the coin can move to
 		// let positions = [
 		// 	{ x: 120, y: 135 }, { x: 680, y: 135 },
@@ -215,8 +242,8 @@ class Level1Scene extends Phaser.Scene {
 		// positions = positions.filter((p) => !(p.x === this.coin.x && p.y === this.coin.y));
 
 		// let newPosition = Phaser.Math.RND.pick(positions);
-		// this.coin.setPosition(newPosition.x, newPosition.y);
-		// this.coin.setScale(0);
+		// this.musicNote.setPosition(newPosition.x, newPosition.y);
+		// this.musicNote.setScale(0);
 
 		// this.tweens.add({
 		// 	targets: this.coin,
@@ -237,6 +264,7 @@ class Level1Scene extends Phaser.Scene {
 	addEnemy() {
 		let enemy = this.enemies.create(this.game.config.width / 2, 0, "enemy");
 
+		enemy.setScale(.3);
 
 		// TODO 8: this below gravity/velocity code to use something based on randomness! 
 
@@ -259,7 +287,7 @@ class Level1Scene extends Phaser.Scene {
 	* Called when the player dies. Restart the level (scene)
 	*/
 	handlePlayerDeath() {
-		this.deadSound.play();
+		// this.deadSound.play();
 		this.emitter.explode(this.emitter.quantity, this.player.x, this.player.y);
 
 		// we can't immediately restart the scene; otherwise our particles will disappear
