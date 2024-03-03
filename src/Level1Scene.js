@@ -31,7 +31,6 @@ class Level1Scene extends Phaser.Scene {
 	 */
 	create() {
 		this.add.image(1000, 650, 'level1bg');
-		this.enemySpeed = 10
 
 		// TODO: add variables needed
 		this.totalMusicNotes = 5; // # of music notes player must collect in total 
