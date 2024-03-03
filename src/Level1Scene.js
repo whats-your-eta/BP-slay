@@ -35,17 +35,6 @@ class Level1Scene extends Phaser.Scene {
 		this.totalMusicNotes = 5; // # of music notes player must collect in total 
 		this.collectedMusicNotes = 0; // # of music notes player has collected, initialized at 0
 
-
-		//timer
-		var to_subtract = 0;
-		var timer = scene.time.addEvent({
-			delay: 1000-to_subtract,                // ms
-			callback: callback,
-			//args: [],
-			callbackScope: thisArg,
-			repeat: 4
-		});
-
 		// create the player sprite
 		this.player = this.physics.add.sprite(this.game.config.width / 2, this.game.config.height / 2, "player");
 
