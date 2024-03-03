@@ -69,18 +69,17 @@ class Level1Scene extends Phaser.Scene {
 		this.createBounds();
 
 
-		this.musicNotes = this.physics.add.group();
+		// this.musicNotes = this.physics.add.group();
 
-		this.musicNotes.create(42, 251, "musicNote1");
-		this.musicNotes.create(4, 21, "musicNote2");
-		this.musicNotes.create(442, 51, "musicNote3");
-		this.setNoteLocations();
+		// this.musicNotes.create(42, 251, "musicNote1");
+		// this.musicNotes.create(4, 21, "musicNote2");
+		// this.musicNotes.create(442, 51, "musicNote3");
+		// this.setNoteLocations();
 
 		// If the player collides with a music note, change fact
-		this.physics.add.collider(this.player, this.enemies, () => {
-			this.handlePlayerDeath(); // TODO
-		});
-		// this.moveCoin();
+		// this.physics.add.collider(this.player, this.musicNotes, () => {
+		// 	this.handlePlayerDeath(); // TODO
+		// });
 
 		// Display the score
 		// this.scoreLabel = this.add.text(30, 25, "score: 0", {
@@ -222,6 +221,9 @@ class Level1Scene extends Phaser.Scene {
 
 	checkMusicNoteCollisions() {
 		// update fun fact label
+		console.log(this.musicNote1)
+		console.log(this.musicNote2)
+		console.log(this.musicNote3)
 		if (this.physics.overlap(this.player, this.musicNote1) || this.physics.overlap(this.player, this.musicNote2) || this.physics.overlap(this.player, this.musicNote3)) {
     // Code to execute if any of the overlaps are true
 			this.score +=5;
@@ -252,38 +254,39 @@ class Level1Scene extends Phaser.Scene {
 	 * randomize music note locations
 	 */
 	setNoteLocations() {
-		// Define an array of possible positions for music notes
-		const possiblePositions = [
-			{ x: Phaser.Math.RND.between(0, 1000), y: Phaser.Math.RND.between(0, 650) },
-			{ x: Phaser.Math.RND.between(0, 1000), y: Phaser.Math.RND.between(0, 650) },
-			{ x: Phaser.Math.RND.between(0, 1000), y: Phaser.Math.RND.between(0, 650) },
-			{ x: Phaser.Math.RND.between(0, 1000), y: Phaser.Math.RND.between(0, 650) },
-			{ x: Phaser.Math.RND.between(0, 1000), y: Phaser.Math.RND.between(0, 650) },
-			// Add more positions if needed
-		];
+		// // Define an array of possible positions for music notes
+		// const possiblePositions = [
+		// 	{ x: Phaser.Math.RND.between(0, 1000), y: Phaser.Math.RND.between(0, 650) },
+		// 	{ x: Phaser.Math.RND.between(0, 1000), y: Phaser.Math.RND.between(0, 650) },
+		// 	{ x: Phaser.Math.RND.between(0, 1000), y: Phaser.Math.RND.between(0, 650) },
+		// 	{ x: Phaser.Math.RND.between(0, 1000), y: Phaser.Math.RND.between(0, 650) },
+		// 	{ x: Phaser.Math.RND.between(0, 1000), y: Phaser.Math.RND.between(0, 650) },
+		// 	// Add more positions if needed
+		// ];
 	
-		// Loop through each music note and set its position randomly
-		for (let note of this.musicNotes.children.entries) {
-			// var i = Phaser.Math.RND.between(0,possiblePositions.length);
-			// const newPosition = possiblePositions[i]; // Get a random position from the array
-			note.setPosition(Phaser.Math.RND.between(0, 500), 
-				Phaser.Math.RND.between(0, 500));
-			// note.setPosition(newPosition.x, newPosition.y);
-		}
+		// // Loop through each music note and set its position randomly
+		// for (let note of this.musicNotes.children.entries) {
+		// 	console.log(note);
+		// 	// var i = Phaser.Math.RND.between(0,possiblePositions.length);
+		// 	// const newPosition = possiblePositions[i]; // Get a random position from the array
+		// 	note.setPosition(Phaser.Math.RND.between(0, 500), 
+		// 		Phaser.Math.RND.between(0, 500));
+		// 	// note.setPosition(newPosition.x, newPosition.y);
+		// }
 	
-		// this.coin.setScale(0);
+		// // this.coin.setScale(0);
 
-		// this.tweens.add({
-		// 	targets: this.coin,
-		// 	scale: 1,
-		// 	duration: 300,
-		// });
-		// this.tweens.add({
-		// 	targets: this.player,
-		// 	scale: 1.3,
-		// 	duration: 100,
-		// 	yoyo: true, // perform the tween forward then backward
-		// });
+		// // this.tweens.add({
+		// // 	targets: this.coin,
+		// // 	scale: 1,
+		// // 	duration: 300,
+		// // });
+		// // this.tweens.add({
+		// // 	targets: this.player,
+		// // 	scale: 1.3,
+		// // 	duration: 100,
+		// // 	yoyo: true, // perform the tween forward then backward
+		// // });
 	}
 
 	/**
