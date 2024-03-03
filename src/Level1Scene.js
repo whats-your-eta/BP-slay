@@ -27,6 +27,8 @@ class Level1Scene extends Phaser.Scene {
 	 * Create any objects needed
 	 */
 	create() {
+		this.add.image(1000, 650, 'level1bg');
+		this.enemySpeed = 10
 
 		// TODO: add variables needed
 		this.totalMusicNotes = 5; // # of music notes player must collect in total 
@@ -146,11 +148,21 @@ class Level1Scene extends Phaser.Scene {
 		if (this.player.y > this.game.config.height || this.player.y < 0) {
 			this.handlePlayerDeath();
 		}
+			var angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, player.x, player.y);
+			enemy.x += Math.cos(angle) * speed;
+			enemy.y += Math.sin(angle) * speed;
+		}
 	}
 
 	/**
 	 * Handles moving the player with the arrow keys
 	 */
+	moveEnemyTowardsPlayer(){
+		var angle = Phaser.Math.Angle.Between(this.enemy.x, this.enemy.y, this.player.x, this.player.y);
+		enemySpeed = 
+		this.enemy.x += Math.cos(angle) * this.enemySpeed;
+    	this.enemy.y += Math.sin(angle) * this.enemySpeed;
+	}
 	movePlayer() {
 		// check for active input
 		if (this.cursors.left.isDown) {
