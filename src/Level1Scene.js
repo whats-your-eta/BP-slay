@@ -141,10 +141,7 @@ class Level1Scene extends Phaser.Scene {
 		if (this.player.y > this.game.config.height || this.player.y < 0) {
 			this.handlePlayerDeath();
 		}
-			var angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, player.x, player.y);
-			enemy.x += Math.cos(angle) * speed;
-			enemy.y += Math.sin(angle) * speed;
-		}
+		this.moveEnemyTowardsPlayer();
 	}
 
 	/**
@@ -156,6 +153,7 @@ class Level1Scene extends Phaser.Scene {
 		this.enemy.x += Math.cos(angle) * this.enemySpeed;
     	this.enemy.y += Math.sin(angle) * this.enemySpeed;
 	}
+
 	movePlayer() {
 		// check for active input
 		if (this.cursors.left.isDown) {
