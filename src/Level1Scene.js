@@ -108,6 +108,8 @@ class Level1Scene extends Phaser.Scene {
 			// don't start the explosion right away
 			emitting: false,
 		});
+
+		// TODO switch scene to Level2Scene when character has achieved all music notes and transition plays (mb an animation plays???)
 	}
 
 	updateLivesLabel() {
