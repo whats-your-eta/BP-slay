@@ -86,7 +86,7 @@ class Level1Scene extends Phaser.Scene {
 		// 	font: "18px Arial",
 		// 	fill: "#ffffff",
 		// });
-		this.funFactLabel = this.add.text(0, 500, "In 4/4 time, the downbeat is the first beat of a measure and is the strongest beat. Funk Grooves are characterized by strong down beats. Examples include Average White Band – “Pick Up the Pieces” and Commodores – “Brick House”", {
+		this.funFactLabel = this.add.text(0, 500, "Fun fact: In 4/4 time, the downbeat is the first beat of a measure and is the strongest beat. \nFunk Grooves are characterized by strong down beats. Examples include Average White Band \n– “Pick Up the Pieces” and Commodores – “Brick House”", {
 			font: "18px Arial",
 			fill: "#000000",
 		});
