@@ -11,7 +11,10 @@ class Level1Scene extends Phaser.Scene {
 			frameHeight: 20,
 		});
 
-		this.load.image("level1bg", "assets/level1bg.png");
+		this.load.image("brownroom", "assets/brownroom.png", {
+			frameWidth: 1000,
+			frameHeight: 650,
+		});
 
 		this.load.image("musicNote", "assets/musicNote.png"); // TODO add all types of music notes
 		this.load.image("enemy", "assets/enemy.png");
@@ -37,6 +40,8 @@ class Level1Scene extends Phaser.Scene {
 		// create the player sprite
 		this.player = this.physics.add.sprite(this.game.config.width / 2, this.game.config.height / 2, "player");
 
+		// bg 
+		this.backgroundImage = this.add.image(400, 300, 'brownroom');
 		// player movement animations
 		this.anims.create({
 			key: "right",
@@ -57,10 +62,8 @@ class Level1Scene extends Phaser.Scene {
 		// create arrow keys
 		this.cursors = this.input.keyboard.createCursorKeys();
 
-		this.createWalls();
+		this.createBounds();
 
-		// Make the player collide with walls
-		this.physics.add.collider(this.player, this.walls);
 
 		this.musicNote = this.physics.add.sprite(0, 0, "musicNote");
 		this.moveCoin();
@@ -81,8 +84,6 @@ class Level1Scene extends Phaser.Scene {
 			callback: () => this.addEnemy(),
 			loop: true,
 		});
-		// Make the enemies and walls collide
-		this.physics.add.collider(this.enemies, this.walls);
 		// If the player collides with an enemy, restart the game
 		this.physics.add.collider(this.player, this.enemies, () => {
 			this.handlePlayerDeath();
@@ -114,18 +115,10 @@ class Level1Scene extends Phaser.Scene {
 	/**
 	 * Creates the walls of the game: borders of screen rectangle & prevention of player moving up thru blackboard
 	 */
-	createWalls() {
-		// create the tilemap
-		let map = this.add.tilemap("map");
-
-		// Add the tileset to the map
-		// the first parameter is the name of the tileset in Tiled
-		// the second parameter is the name of the tileset in preload()
-		let tileset = map.addTilesetImage("tileset", "tileset");
-		this.walls = map.createLayer("Level 1", tileset);
-
-		// Enable collisions for the first tile (the blue walls)
-		this.walls.setCollision(1);
+	createBounds() {
+		this.physics.world.setBounds(0, 0, gameState.width, gameState.height, true, true, true, false);
+		gameState.player.setCollideWorldBounds(true);
+		gameState.enemies.setCollideWorldBounds(true);
 	}
 
 	/**
