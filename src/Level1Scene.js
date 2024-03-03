@@ -151,8 +151,8 @@ class Level1Scene extends Phaser.Scene {
 	 * Handles moving the player with the arrow keys
 	 */
 	moveEnemyTowardsPlayer(){
-		var angle = Phaser.Math.Angle.Between(this.enemy.x, this.enemy.y, this.player.x, this.player.y);
-		enemySpeed = 
+		let angle = Phaser.Math.Angle.Between(this.enemy.x, this.enemy.y, this.player.x, this.player.y);
+		// enemySpeed = 
 		this.enemy.x += Math.cos(angle) * this.enemySpeed;
     	this.enemy.y += Math.sin(angle) * this.enemySpeed;
 	}
