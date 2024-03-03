@@ -16,7 +16,9 @@ class Level1Scene extends Phaser.Scene {
 			frameHeight: 650,
 		});
 
-		this.load.image("musicNote", "assets/musicNote.png"); // TODO add all types of music notes
+		this.load.image("musicNote1", "assets/musicNote1.png"); // TODO add all types of music notes
+		this.load.image("musicNote2", "assets/musicNote2.png");
+		this.load.image("musicNote3", "assets/musicNote3.png");
 		this.load.image("enemy", "assets/enemy.png");
 
 		this.load.audio("jump", ["assets/jump.ogg", "assets/jump.mp3"]);
@@ -33,7 +35,7 @@ class Level1Scene extends Phaser.Scene {
 		this.add.image(1000, 650, 'level1bg');
 
 		// TODO: add variables needed
-		this.totalMusicNotes = 5; // # of music notes player must collect in total 
+		this.totalMusicNotes = 3; // # of music notes player must collect in total 
 		this.collectedMusicNotes = 0; // # of music notes player has collected, initialized at 0
 
 		// create the player sprite
