@@ -16,9 +16,9 @@ class Level1Scene extends Phaser.Scene {
 			frameHeight: 650,
 		});
 
-		// this.load.image("musicNote1", "assets/musicNote1.png"); // TODO add all types of music notes
-		// this.load.image("musicNote2", "assets/musicNote2.png");
-		// this.load.image("musicNote3", "assets/musicNote3.png");
+		this.load.image("musicNote1", "assets/musicNote1.png"); // TODO add all types of music notes
+		this.load.image("musicNote2", "assets/musicNote2.png");
+		this.load.image("musicNote3", "assets/musicNote3.png");
 		this.load.image("enemy", "assets/ghost.png");
 
 		// this.load.audio("jump", ["assets/jump.ogg", "assets/jump.mp3"]);
@@ -69,13 +69,27 @@ class Level1Scene extends Phaser.Scene {
 		this.createBounds();
 
 
-		this.musicNote = this.physics.add.sprite(0, 0, "musicNote");
+		this.musicNotes = this.physics.add.group();
+
+		this.musicNotes.create(42, 251, "musicNote1");
+		this.musicNotes.create(4, 21, "musicNote2");
+		this.musicNotes.create(442, 51, "musicNote3");
+		this.setNoteLocations();
+
+		// If the player collides with a music note, change fact
+		this.physics.add.collider(this.player, this.enemies, () => {
+			this.handlePlayerDeath(); // TODO
+		});
 		// this.moveCoin();
 
 		// Display the score
-		this.scoreLabel = this.add.text(30, 25, "score: 0", {
+		// this.scoreLabel = this.add.text(30, 25, "score: 0", {
+		// 	font: "18px Arial",
+		// 	fill: "#ffffff",
+		// });
+		this.funFactLabel = this.add.text(this.game.config.width/2, 500, "FUN FACT!", {
 			font: "18px Arial",
-			fill: "#ffffff",
+			fill: "#000000",
 		});
 
 		this.score = 0;
@@ -205,7 +219,17 @@ class Level1Scene extends Phaser.Scene {
 	/**
 	 * Check to see whether the player has collided with any music notes
 	 */
+
 	checkMusicNoteCollisions() {
+		// update fun fact label
+		if (this.physics.overlap(this.player, this.musicNote1) || this.physics.overlap(this.player, this.musicNote2) || this.physics.overlap(this.player, this.musicNote3)) {
+    // Code to execute if any of the overlaps are true
+			this.score +=5;
+			this.scoreLabel.setText("score: " + this.score);
+		}
+
+
+		this.funFactLabel.setText("NEW FACT NOW!!! TODO");
 		// if (this.physics.overlap(this.player, this.musicNote)) {
 		// 	// the player has found a music note!
 
@@ -218,7 +242,8 @@ class Level1Scene extends Phaser.Scene {
 		// 	this.musicNote.setVisible(false);
 
 		// 	// // move the coin to a new spot
-		// 	// this.moveCoin();
+			//this.moveCoin();
+
 		// 	// this.coinSound.play();
 		// }
 	}
@@ -226,19 +251,26 @@ class Level1Scene extends Phaser.Scene {
 	/**
 	 * randomize music note locations
 	 */
-	setNoteLocations() { // TODO make this for multiple music notes
-		// // these are the possible positions the coin can move to
-		// let positions = [
-		// 	{ x: 120, y: 135 }, { x: 680, y: 135 },
-		// 	{ x: 120, y: 295 }, { x: 680, y: 295 },
-		// 	{ x: 120, y: 455 }, { x: 680, y: 455 }
-		// ];
-
-		// // don't move to the same location it was already at
-		// positions = positions.filter((p) => !(p.x === this.coin.x && p.y === this.coin.y));
-
-		// let newPosition = Phaser.Math.RND.pick(positions);
-		// this.coin.setPosition(newPosition.x, newPosition.y);
+	setNoteLocations() {
+		// Define an array of possible positions for music notes
+		const possiblePositions = [
+			{ x: Phaser.Math.RND.between(0, 1000), y: Phaser.Math.RND.between(0, 650) },
+			{ x: Phaser.Math.RND.between(0, 1000), y: Phaser.Math.RND.between(0, 650) },
+			{ x: Phaser.Math.RND.between(0, 1000), y: Phaser.Math.RND.between(0, 650) },
+			{ x: Phaser.Math.RND.between(0, 1000), y: Phaser.Math.RND.between(0, 650) },
+			{ x: Phaser.Math.RND.between(0, 1000), y: Phaser.Math.RND.between(0, 650) },
+			// Add more positions if needed
+		];
+	
+		// Loop through each music note and set its position randomly
+		for (let note of this.musicNotes.children.entries) {
+			// var i = Phaser.Math.RND.between(0,possiblePositions.length);
+			// const newPosition = possiblePositions[i]; // Get a random position from the array
+			note.setPosition(Phaser.Math.RND.between(0, 500), 
+				Phaser.Math.RND.between(0, 500));
+			// note.setPosition(newPosition.x, newPosition.y);
+		}
+	
 		// this.coin.setScale(0);
 
 		// this.tweens.add({
