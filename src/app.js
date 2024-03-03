@@ -4,8 +4,8 @@ import Level1Scene from "./Level1Scene";
 // config! 
 const config = {
 	type: Phaser.AUTO,
-	width: 800,
-	height: 560,
+	width: 1000,
+	height: 650,
 	// TODO 5: Add WelcomeScene to the list of scenes. Think about the order!
 	scene: [Level1Scene], 
 	physics: {
