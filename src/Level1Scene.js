@@ -1,6 +1,5 @@
 import Phaser from "phaser";
 
-// TODO 1: Move this GameScene into gameScene.js, a new file
 class Level1Scene extends Phaser.Scene {
 	constructor() {
 		super("Level1Scene")
@@ -12,28 +11,24 @@ class Level1Scene extends Phaser.Scene {
 			frameHeight: 20,
 		});
 
-		this.load.image("tileset", "assets/tileset.png");
-		// created with Tiled tilemap editor
-		this.load.tilemapTiledJSON("map", "assets/map.json");
+		this.load.image("level1bg", "assets/level1bg.png");
 
-		this.load.image("coin", "assets/coin.png");
+		this.load.image("musicNote", "assets/musicNote.png"); // TODO add all types of music notes
 		this.load.image("enemy", "assets/enemy.png");
 
 		this.load.audio("jump", ["assets/jump.ogg", "assets/jump.mp3"]);
-		this.load.audio("coin", ["assets/coin.ogg", "assets/coin.mp3"]);
+		this.load.audio("musicNote", ["assets/coin.ogg", "assets/coin.mp3"]); // TODO add all sounds of music notes
 		this.load.audio("dead", ["assets/dead.ogg", "assets/dead.mp3"]);
 
 		this.load.image("pixel", "assets/pixel.png");
 	}
 
 	/**
-	 * Called once. Create any objects you need here!
+	 * Create any objects needed
 	 */
 	create() {
 
-		// TODO 7.1: add lives variable
-
-		// TODO 7.2: add liveslabel variable (text shown) an update for it
+		// TODO: add variables needed
 
 		// create the player sprite
 		this.player = this.physics.add.sprite(this.game.config.width / 2, this.game.config.height / 2, "player");
@@ -52,8 +47,8 @@ class Level1Scene extends Phaser.Scene {
 			repeat: -1,
 		});
 
-		// add gravity to make the player fall
-		this.player.body.gravity.y = 500;
+		// no gravity
+		this.player.body.gravity.y = 0;
 
 		// create arrow keys
 		this.cursors = this.input.keyboard.createCursorKeys();
@@ -90,7 +85,7 @@ class Level1Scene extends Phaser.Scene {
 		});
 
 		this.jumpSound = this.sound.add("jump");
-		this.coinSound = this.sound.add("coin");
+		this.noteSound = this.sound.add("musicNote"); // TODO do for all music notes
 		this.deadSound = this.sound.add("dead");
 
 		// particles for when the player dies
@@ -112,12 +107,8 @@ class Level1Scene extends Phaser.Scene {
 		// TODO switch scene to Level2Scene when character has achieved all music notes and transition plays (mb an animation plays???)
 	}
 
-	updateLivesLabel() {
-		// TODO 7.3: create function that updates the lives label
-	}
-
 	/**
-	 * Creates the walls of the game
+	 * Creates the walls of the game: borders of screen rectangle & prevention of player moving up thru blackboard
 	 */
 	createWalls() {
 		// create the tilemap
@@ -182,50 +173,52 @@ class Level1Scene extends Phaser.Scene {
 	}
 
 	/**
-	 * Check to see whether the player has collided with any coins
+	 * Check to see whether the player has collided with any music notes
 	 */
-	checkCoinCollisions() {
-		if (this.physics.overlap(this.player, this.coin)) {
-			// the player has taken a coin!
-			// add 5 to the score
-			this.score += 5;
+	checkMusicNoteCollisions() {
+		if (this.physics.overlap(this.player, this.musicNote)) {
+			// the player has found a music note!
+
+			this.score += 5; // TODO replace 'score' with '# music notes found'
+			
 			// update the score label
 			this.scoreLabel.setText("score: " + this.score);
-			// move the coin to a new spot
-			this.moveCoin();
-			this.coinSound.play();
+			
+			// // move the coin to a new spot
+			// this.moveCoin();
+			// this.coinSound.play();
 		}
 	}
 
 	/**
-	 * Move the coin to a different random location
+	 * randomize music note locations
 	 */
-	moveCoin() {
-		// these are the possible positions the coin can move to
-		let positions = [
-			{ x: 120, y: 135 }, { x: 680, y: 135 },
-			{ x: 120, y: 295 }, { x: 680, y: 295 },
-			{ x: 120, y: 455 }, { x: 680, y: 455 }
-		];
+	setNoteLocations() { // TODO make this for multiple music notes
+		// // these are the possible positions the coin can move to
+		// let positions = [
+		// 	{ x: 120, y: 135 }, { x: 680, y: 135 },
+		// 	{ x: 120, y: 295 }, { x: 680, y: 295 },
+		// 	{ x: 120, y: 455 }, { x: 680, y: 455 }
+		// ];
 
-		// don't move to the same location it was already at
-		positions = positions.filter((p) => !(p.x === this.coin.x && p.y === this.coin.y));
+		// // don't move to the same location it was already at
+		// positions = positions.filter((p) => !(p.x === this.coin.x && p.y === this.coin.y));
 
-		let newPosition = Phaser.Math.RND.pick(positions);
-		this.coin.setPosition(newPosition.x, newPosition.y);
-		this.coin.setScale(0);
+		// let newPosition = Phaser.Math.RND.pick(positions);
+		// this.coin.setPosition(newPosition.x, newPosition.y);
+		// this.coin.setScale(0);
 
-		this.tweens.add({
-			targets: this.coin,
-			scale: 1,
-			duration: 300,
-		});
-		this.tweens.add({
-			targets: this.player,
-			scale: 1.3,
-			duration: 100,
-			yoyo: true, // perform the tween forward then backward
-		});
+		// this.tweens.add({
+		// 	targets: this.coin,
+		// 	scale: 1,
+		// 	duration: 300,
+		// });
+		// this.tweens.add({
+		// 	targets: this.player,
+		// 	scale: 1.3,
+		// 	duration: 100,
+		// 	yoyo: true, // perform the tween forward then backward
+		// });
 	}
 
 	/**
@@ -253,7 +246,7 @@ class Level1Scene extends Phaser.Scene {
 		});
 	}
 	/*
-	* Called when the player dies. Restart the game
+	* Called when the player dies. Restart the level (scene)
 	*/
 	handlePlayerDeath() {
 		this.deadSound.play();
@@ -266,20 +259,12 @@ class Level1Scene extends Phaser.Scene {
 		// delete all the enemies
 		this.enemies.clear(true, true);
 
-		// TODO 7.4: decrement lives and update the lives label
-
 
 		// restart the scene after 1 second
 		this.time.addEvent({
 			delay: 800,
 			callback: () => {
 				this.scene.restart();
-				// TODO 7.5: we don't just want to restard, we want to change based on if we have lives left!! 
-				if (this.lives > 0) {
-					// TODO 7.6: set what we want to do if there are still lives left
-				} else {
-					// TODO 7.7: what do you want to do instead? maybe go back to welcomescene?
-				}
 			}
 		});
 	}
