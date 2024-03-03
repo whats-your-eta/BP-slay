@@ -39,10 +39,10 @@ class Level1Scene extends Phaser.Scene {
 		this.player = this.physics.add.sprite(this.game.config.width / 2, this.game.config.height / 2, "player");
 
 		// bg 
-		this.backgroundImage = this.add.image(400, 300, 'brownroom');
+		this.backgroundImage = this.add.image(500, 325, 'brownroom');
 		// player movement animations
 		this.anims.create({
-			key: "right",
+						key: "right",
 			frames: this.anims.generateFrameNumbers("player", { frames: [1, 2] }),
 			frameRate: 8,
 			repeat: -1,
