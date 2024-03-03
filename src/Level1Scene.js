@@ -31,6 +31,7 @@ class Level1Scene extends Phaser.Scene {
 	 */
 	create() {
 		this.add.image(1000, 650, 'level1bg');
+		this.enemySpeed = 10
 
 		// TODO: add variables needed
 		this.totalMusicNotes = 5; // # of music notes player must collect in total 
@@ -202,11 +203,6 @@ class Level1Scene extends Phaser.Scene {
 	 * randomize music note locations
 	 */
 	setNoteLocations() { // TODO make this for multiple music notes
-		var x = Phaser.Math.Between(-100, 100);
-		var y = Phaser.Math.Between(-50, 0);
-		this.musicNote.setPosition(x,y);
-		this.musicNote.setScale(0);
-
 		// // these are the possible positions the coin can move to
 		// let positions = [
 		// 	{ x: 120, y: 135 }, { x: 680, y: 135 },
@@ -218,8 +214,8 @@ class Level1Scene extends Phaser.Scene {
 		// positions = positions.filter((p) => !(p.x === this.coin.x && p.y === this.coin.y));
 
 		// let newPosition = Phaser.Math.RND.pick(positions);
-		// this.musicNote.setPosition(newPosition.x, newPosition.y);
-		// this.musicNote.setScale(0);
+		// this.coin.setPosition(newPosition.x, newPosition.y);
+		// this.coin.setScale(0);
 
 		// this.tweens.add({
 		// 	targets: this.coin,
